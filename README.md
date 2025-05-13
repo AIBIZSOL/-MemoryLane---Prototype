@@ -1,3 +1,7 @@
+# MemoryLane---Prototype
+
+This repository is to develop a prototype using AI technologies to reconstruct the young happy memory of an elderly
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
