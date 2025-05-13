@@ -1,11 +1,59 @@
 import { User, Story, Storyboard, Media, Activity, ProjectProgress } from '../types';
 
 // Mock User
-export const mockUser: User = {
-  id: 'user1',
-  name: 'Martha Thompson',
-  email: 'martha@example.com',
-  createdAt: '2023-01-15T10:30:00Z',
+export const mockUser = {
+  User: [
+    {
+      id: 'user1',
+      name: 'Martha Thompson',
+      email: 'martha@example.com',
+      createdAt: '2023-01-15T10:30:00Z',
+    },
+    {
+      id: 'user2',
+      name: 'Martha',
+      email: 'demo@example.com',
+      createdAt: '2023-01-15T10:30:00Z',
+    }
+  ]
+}
+// Mock data for dashboard
+export const mockDashboardData = {
+  progressItems: [
+    {
+      id: 1,
+      title: 'Story Creation',
+      status: 'in progress',
+      progress: 75
+    },
+    {
+      id: 2,
+      title: 'Storyboard Creation',
+      status: 'waiting',
+      progress: 0
+    },
+    {
+      id: 3,
+      title: 'Video Creation',
+      status: 'future',
+      progress: 0
+    }
+  ],
+  activities: [
+    {
+      id: 1,
+      type: 'upload',
+      message: 'Photos uploaded successfully',
+      timestamp: 'Yesterday at 3:45 PM',
+      status: 'success'
+    },
+    {
+      id: 2,
+      type: 'info',
+      message: 'Your story draft is ready for review',
+      timestamp: 'Today at 9:12 AM'
+    }
+  ]
 };
 
 // Mock Stories

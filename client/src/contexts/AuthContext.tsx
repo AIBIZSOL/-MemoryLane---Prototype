@@ -1,78 +1,95 @@
 // src/contexts/AuthContext.tsx
-'use client';
+"use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { User } from '../types';
-import { authService } from '../services/';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import AuthService from '@/services/auth.service';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  avatar: string;
+}
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  isAuthenticated: boolean;
 }
 
+// Create the context with undefined as default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+// The Auth Provider component
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Check authentication status on initial load
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = async () => {
+    const checkAuthStatus = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
-        }
+        const currentUser = await AuthService.getCurrentUser();
+        setUser(currentUser);
       } catch (error) {
-        console.error('Failed to fetch user:', error);
-        localStorage.removeItem('token');
+        console.error('Auth check failed:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    checkAuth();
+    checkAuthStatus();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      setLoading(true);
-      const { token, user } = await authService.login(email, password);
-      localStorage.setItem('token', token);
-      setUser(user);
-    } finally {
-      setLoading(false);
+      const response = await AuthService.login(email, password);
+      setUser(response.user);
+      
+      // In a real implementation, you might store the token in localStorage or a secure cookie
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const logout = async () => {
     try {
-      setLoading(true);
-      const { token, user } = await authService.register(name, email, password);
-      localStorage.setItem('token', token);
-      setUser(user);
-    } finally {
-      setLoading(false);
+      await AuthService.logout();
+      setUser(null);
+      localStorage.removeItem('token');
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
   };
 
-  const logout = () => {
-    authService.logout();
-    setUser(null);
+  const contextValue: AuthContextType = {
+    user,
+    loading,
+    login,
+    logout,
+    isAuthenticated: !!user
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
+// The useAuth hook - this is the ONLY place where useAuth should be defined
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
