@@ -8,8 +8,8 @@ This project is organized as a monorepo with separate frontend and backend direc
 
 ```
 memory-lane/
-├── client/ (Next.js)
-└── server/ (Nest.js)
+├── frontend/ (Next.js)
+└── backend/ (Nest.js)
 ```
 
 ## Getting Started
@@ -25,7 +25,7 @@ The frontend includes a mock data implementation that allows you to test the app
 
 1. Navigate to the frontend directory:
    ```bash
-   cd client
+   cd frontend
    ```
 
 2. Install dependencies:
@@ -43,7 +43,7 @@ The frontend includes a mock data implementation that allows you to test the app
    npm run dev
    ```
 
-5. Open [http://localhost:3001](http://localhost:3001) in your browser.
+5. Open [http://localhost:3000](http://localhost:3001) in your browser.
 
 6. Use the demo credentials to log in:
    - Email: demo@example.com
