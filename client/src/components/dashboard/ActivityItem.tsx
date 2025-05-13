@@ -40,10 +40,10 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ type, message, timestamp, s
   };
 
   return (
-    <div className="flex items-center p-4 border border-gray-100 rounded-lg bg-white">
+    <div className="flex items-center p-4 border border-gray-100 rounded-lg bg-white shadow-sm">
       {getIcon()}
       <div className="ml-4">
-        <p className="text-gray-800">{message}</p>
+        <p className="text-gray-800 font-medium">{message}</p>
         <p className="text-sm text-gray-500">{timestamp}</p>
       </div>
     </div>
