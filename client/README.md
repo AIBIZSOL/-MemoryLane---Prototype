@@ -43,7 +43,7 @@ The frontend includes a mock data implementation that allows you to test the app
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3001](http://localhost:3001) in your browser.
 
 6. Use the demo credentials to log in:
    - Email: demo@example.com
