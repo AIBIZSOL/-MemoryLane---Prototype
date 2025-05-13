@@ -44,14 +44,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       {/* Navigation */}
       <nav className="bg-white border-b">
         <div className="container mx-auto px-6">
-          <div className="flex space-x-8">
+          <div className="flex">
             {navItems.map((item) => {
               const isActive = pathname === item.path;
               return (
                 <Link
                   key={item.name}
                   href={item.path}
-                  className={`py-4 px-1 text-gray-700 hover:text-indigo-600 border-b-2 transition-colors ${
+                  className={`py-4 px-6 block text-gray-700 hover:text-indigo-600 border-b-2 transition-colors ${
                     isActive ? 'border-indigo-600 text-indigo-600 font-medium' : 'border-transparent'
                   }`}
                 >
