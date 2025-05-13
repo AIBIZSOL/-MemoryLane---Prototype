@@ -1,8 +1,9 @@
 // src/app/layout.tsx
-// src/app/layout.tsx
+import type { Metadata } from 'next'
 import './globals.css';
 import { Inter, Poppins } from 'next/font/google';
 import { ClientProviders } from '../components/providers/ClientProviders';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ 
