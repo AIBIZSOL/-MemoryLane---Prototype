@@ -25,69 +25,11 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Building a NestJS Server for Memory Lane: Step-by-Step Guide
+## Project setup
 
-Let's create a comprehensive NestJS backend for your Memory Lane service with Task Forces 1 & 2. I'll guide you through each step of the process.
-
-#### Step 1: Setting Up Your NestJS Project
-
-First, install the NestJS CLI globally (if you haven't already):
-> npm install -g @nestjs/cli
-
-Now create a new NestJS project:
-
-> nest new memory-lane-server
-
-> cd memory-lane-server
-
-When prompted, select your preferred package manager (npm, yarn, or pnpm).
-
-#### Step 2: Install Required Dependencies
-
-Install the packages we'll need for the Memory Lane service:
-
-> npm install --save @nestjs/config class-validator class-transformer multer uuid 
-
-> npm install --save axios 
-
-> npm install --save @nestjs/jwt passport passport-jwt
-
-> npm install --save-dev @types/multer @types/passport-jwt
-
-#### Step 3: Configure Environment Variables
-
-Create a .env file in the root directory:
-
-PORT=3000
-
-JWT_SECRET=your_jwt_secret_key
-
-OPENAI_API_KEY=your_openai_api_key
-
-##### Add other API keys as needed for image generation
-
-Update app.module.ts to use ConfigModule:
-
-typescriptimport { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
-})
-export class AppModule {}
-
-#### Step 4: Create Core Models
-Let's create the data models we'll need. Run these commands:
-
-> nest generate module models
+```bash
+$ npm install
+```
 
 ## Compile and run the project
 
