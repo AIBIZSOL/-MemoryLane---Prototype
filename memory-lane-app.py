@@ -5,19 +5,62 @@ import os
 import requests
 import json
 
+# Default content for demonstration purposes
+DEFAULT_STORY = """My first day of high school was a mix of excitement and nervousness. The building seemed enormous compared to my middle school, with long hallways that stretched forever and classrooms that all looked the same. I remember getting lost trying to find my algebra class and arriving ten minutes late, my face burning with embarrassment as everyone turned to look at me.
+
+At lunch, I didn't know where to sit until Maria, a girl from my homeroom, waved me over. We bonded over our shared love of science fiction books. That simple act of kindness made the whole day better.
+
+The science teacher, Mr. Peterson, made an impression right away. He started class by mixing chemicals that erupted in a colorful foam that spilled across his desk while we all gasped and laughed. "Chemistry," he announced with a grin, "is just as messy as high school life."
+
+Those early school friendships and memorable teachers shaped so much of who I became. Looking back now, I can see how those seemingly small moments were actually the beginning of some of the most important relationships in my life."""
+
+DEFAULT_REFINED_STORY = """My first day of high school was a symphony of butterflies and possibilities. The imposing redbrick building loomed before me, its corridors stretching like labyrinths compared to the cozy confines of my middle school. Freshly waxed floors gleamed under fluorescent lights, reflecting the nervous faces of fellow freshmen as we navigated this new world.
+
+I can still feel the weight of my overstuffed backpack cutting into my shoulders as I frantically searched for Room 237. The ticking clock echoed my racing heartbeat until, finally, I pushed open the door to algebra class ten minutes late. The squeak of the hinges might as well have been a bullhorn announcing my arrival, and heat rushed to my cheeks as twenty-four pairs of curious eyes turned in perfect unison.
+
+The cafeteria at noon was a sociological experiment – hundreds of teenagers instinctively sorting themselves into tribal tables. I stood frozen, lunch tray gripped with white knuckles, until I heard someone call my name. Maria, with her infectious smile and constellation of freckles, patted the empty seat beside her. "You mentioned Asimov in homeroom," she said, pulling out a dog-eared copy of Foundation from her bag. In that moment, between comparing favorite chapters and debating the laws of robotics, the vastness of high school shrank to the size of our shared imagination.
+
+I'll never forget walking into seventh-period science. Mr. Peterson, with his Einstein-wild hair and bow tie slightly askew, stood behind a cluttered desk with the focused expression of a mad scientist. Without introduction, he combined liquids from two beakers, creating a volcanic reaction of purple foam that cascaded over his desk and nearly reached our front-row seats. As we gasped and jumped back, his laughter filled the room. "Chemistry," he announced with theatrical timing, eyes twinkling behind safety goggles, "is just as surprising, messy, and fascinating as high school life itself."
+
+Those seemingly ordinary moments – Maria's extended hand of friendship and Mr. Peterson's dramatic introduction – became the first brushstrokes on the canvas of my adolescence. What I couldn't appreciate then, but see with perfect clarity now, is how those chance encounters in fluorescent-lit hallways were silently shaping the person I would become."""
+
+# Default storyboard content
+DEFAULT_STORYBOARD = """## Storyboard Created: 4 Scenes
+
+### Scene 1:
+- **Narration:** "My first day of high school was a symphony of butterflies and possibilities. The imposing redbrick building loomed before me, its corridors stretching like labyrinths compared to the cozy confines of my middle school."
+- **Visual:** School photo 1 with nostalgic filter
+- **Music:** Gentle ambient music reflecting early 2000s era
+
+### Scene 2:
+- **Narration:** "The cafeteria at noon was a sociological experiment – hundreds of teenagers instinctively sorting themselves into tribal tables. I stood frozen, lunch tray gripped with white knuckles, until I heard someone call my name."
+- **Visual:** School photo 2 with nostalgic filter
+- **Music:** Soft piano underscoring the moment of connection
+
+### Scene 3:
+- **Narration:** "Mr. Peterson, with his Einstein-wild hair and bow tie slightly askew, stood behind a cluttered desk with the focused expression of a mad scientist. Without introduction, he combined liquids from two beakers..."
+- **Visual:** School photo 3 with nostalgic filter
+- **Music:** Playful, curious melody with science-lab inspired sounds
+
+### Scene 4:
+- **Narration:** "Those seemingly ordinary moments became the first brushstrokes on the canvas of my adolescence. What I couldn't appreciate then, but see with perfect clarity now..."
+- **Visual:** School photo 1 transitioning gradually to present day
+- **Music:** Emotional crescendo reflecting personal growth and nostalgia
+"""
+
 # Available AI models with correct Ollama model names
 AVAILABLE_MODELS = {
-    "llama": "llama3.3:latest",
-    "llama-vision": "llama3.2-vision:latest",
-    "mistral": "mistral-small:24b"
+    "llama": "llama4:latest",
+    "llava": "llava:34b",
+    "mistral": "mistral-small3.1:24b"
 }
 
 # Ollama API endpoints
-OLLAMA_BASE_URL = "http://localhost:11434/api"
+OLLAMA_BASE_URL = "http://localhost:11434"
 CHAT_ENDPOINT = f"{OLLAMA_BASE_URL}/api/chat"
 GENERATE_ENDPOINT = f"{OLLAMA_BASE_URL}/api/generate"
 
-def refine_story_with_ai(story_text, prompt="", model_name="mistral-small:24b", stream=True):
+def refine_story_with_ai(story_text, prompt="", model_name="mistral-small3.1:24b", stream=True):
     """Uses Ollama API to refine a user's school memory story"""
     # Fall back to simulated refinement if API call fails
     try:
@@ -282,7 +325,8 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
                 
                 refine_prompt = gr.Textbox(
                     placeholder="Tell the AI how to help (e.g., 'add more details', 'make more humorous', 'adapt to Chinese cohort')",
-                    label="AI Refinement Instructions"
+                    label="AI Refinement Instructions",
+                    lines=6
                 )
             
             with gr.Column(scale=1):
@@ -298,7 +342,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
                 )
                 
                 model_choice = gr.Dropdown(
-                    choices=["mistral", "llama", "llama-vision"],
+                    choices=["mistral", "llama", "llava"],
                     label="Choose AI Model",
                     value="mistral",
                     info="Select the AI model for story refinement"
@@ -308,10 +352,11 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
                 **Model Guide:**
                 - **Mistral**: Precise, nuanced refinements (Default)
                 - **Llama**: Creative, elaborate enhancements
-                - **Llama-Vision**: Can later incorporate photo context
+                - **Llava**: Better interprete photo context
                 """)
         
         with gr.Row():
+            load_example_btn = gr.Button("Load Example Story", variant="secondary")
             refine_btn = gr.Button("Refine My Story with AI", variant="primary")
             cohort_btn = gr.Button("Adapt to Cultural Context")
             dialogue_btn = gr.Button("Add Natural Dialogue")
@@ -347,6 +392,8 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
                     file_types=["image"]
                 )
         
+        load_example_storyboard_btn = gr.Button("Load Example Storyboard", variant="secondary")
+
         create_storyboard_btn = gr.Button("Create Storyboard from Story & Photos")
         
         storyboard_output = gr.Markdown(label="Your Storyboard")
@@ -435,7 +482,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
         inputs=refined_story,
         outputs=[storyboard_story_display, progress_status]
     ).then(
-        fn=lambda: gr.Tabs.update(selected="Storyboard"),
+        fn=lambda: gr.update(selected="Storyboard"),
         outputs=tabs
     )
     
@@ -451,7 +498,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
     )
     
     storyboard_save_btn.click(
-        fn=lambda: gr.Tabs.update(selected="Video Creation"),
+        fn=lambda: gr.update(selected="Video Creation"),
         outputs=tabs
     )
     
@@ -480,6 +527,28 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="indigo"), title="Memory Lane: P
         outputs=[story_progress, storyboard_progress, video_progress]
     )
 
+    def load_example_story():
+        """Loads example content into the story input box"""
+        return DEFAULT_STORY
+
+    # Connect the load example button to the function
+    load_example_btn.click(
+        fn=load_example_story,
+        inputs=[],
+        outputs=[story_input]
+    )
+    
+    def load_example_storyboard():
+        """Loads example storyboard and refined story"""
+        status = update_progress("storyboard")
+        return DEFAULT_REFINED_STORY, DEFAULT_STORYBOARD, status
+
+    # Connect the load example storyboard button
+    load_example_storyboard_btn.click(
+        fn=load_example_storyboard,
+        inputs=[],
+        outputs=[storyboard_story_display, storyboard_output, progress_status]
+    )
 # For deployment
 if __name__ == "__main__":
     app.launch()
